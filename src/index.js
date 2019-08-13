@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Input } from 'antd';
 import StoreCard from "./StoreCard"
 import ClassStore from './Data/dataStore'
 import "./styles/css/index.css";
 
 
 const { SubMenu } = Menu;
+const { Search } = Input;
 const { Header, Content, Sider } = Layout;
 
 const routeMap = {
@@ -20,16 +21,16 @@ class App extends React.PureComponent {
         super(props);
         this.state = {
             data: {
-                key : '0',
-                item : '0'
+                key: '0',
+                item: '0'
             }
         }
     }
 
-    SiderClick = (key,item) => {
+    SiderClick = (key, item) => {
         this.state.data = {
-            key : key,
-            item : item
+            key: key,
+            item: item
         };
         this.forceUpdate();
     }
@@ -42,16 +43,30 @@ class App extends React.PureComponent {
         return (
             <Layout>
                 <Header className="header">
-                    <Menu
-                        theme="dark"
-                        mode="horizontal"
-                        defaultSelectedKeys={['1']}
-                        style={{ lineHeight: '64px' }}
-                    >
-                        <Menu.Item key="1">首页</Menu.Item>
-                        <Menu.Item key="2">登录</Menu.Item>
-                        <Menu.Item key="3">免费注册</Menu.Item>
-                    </Menu>
+                    <div className="title-logo">
+                        <div className="logo" >
+                            <img src="../src/images/logo.png" width="80"></img>
+                        </div>
+                        <div>
+                            <Menu
+                                theme="dark"
+                                mode="horizontal"
+                                defaultSelectedKeys={['1']}
+                                style={{ lineHeight: '64px' }}
+                            >
+                                <Menu.Item key="1">首页</Menu.Item>
+                                <Menu.Item key="2">登录</Menu.Item>
+                                <Menu.Item key="3">免费注册</Menu.Item>
+                            </Menu>
+                        </div>
+                        <div className="inputBook">
+                            <Search
+                                placeholder="今日百万每100减50"
+                                onSearch={value => console.log(value)}
+                                style={{ width: 200 }}
+                            />
+                        </div>
+                    </div>
                 </Header>
                 <Layout>
                     <div className="siderHeight">
@@ -73,7 +88,7 @@ class App extends React.PureComponent {
                                         }
                                     >
                                         {Object.keys(ClassStore[key].data).map(item => (
-                                            <Menu.Item onClick={() => this.SiderClick(key,item)} key={ClassStore[key].data[item].key}>{ClassStore[key].data[item].dataName}</Menu.Item>
+                                            <Menu.Item onClick={() => this.SiderClick(key, item)} key={ClassStore[key].data[item].key}>{ClassStore[key].data[item].dataName}</Menu.Item>
                                         ))}
                                     </SubMenu>
                                 ))}

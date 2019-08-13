@@ -23,6 +23,24 @@
     justify-content: center;
 }
 
-.pagination{
+.pagination {
     margin: 0 auto;
+}
+
+
+.logo {
+    position: relative;
+    left: -27px;
+    top: -20px;
+    margin: 10px;
+}
+
+.title-logo {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.inputBook{
+    margin: 0 800px;
 }
