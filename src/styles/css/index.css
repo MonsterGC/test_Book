@@ -1,0 +1,28 @@
+.siderHeight {
+    height: 600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.siderHeight::-webkit-scrollbar {
+    width: 4px;
+    /*height: 4px;*/
+}
+
+.store-Card {
+    font-size: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.store-Card-row {
+    width: 1200px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination{
+    margin: 0 auto;
+}
