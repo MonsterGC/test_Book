@@ -1,0 +1,2 @@
+#除了node_modules之外所有内容
+/node_modules
