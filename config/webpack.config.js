@@ -1,34 +1,9 @@
-const path = require('path');
-const paths = require('./paths');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
- 
-module.exports = {
-    entry: paths.mainJs,
-    output: {
-        filename: 'bundle-[hash].js',
-        path: paths.buildPath
-        },
-    module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
-            },{
-                 test: /\.css$/, 
-                 use: ['style-loader', 'css-loader'] 
-            },{ 
-                test: /\.(png|jpg|jpeg|gif)$/, 
-                use: 'url-loader' 
-            },
-        ]
-    },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: paths.html,
-            inject: true
-        })
-    ]
-  };
+const merge = require('webpack-merge')
+const baseConfig = require('./webpack.base.config')
+const devConfig = require('./webpack.dev.config')
+const proConfig = require('./webpack.pro.config')
+
+module.exports = (env, argv) => {
+    let config = argv.mode === 'development' ? devConfig : proConfig;
+    return merge(baseConfig, config);
+};

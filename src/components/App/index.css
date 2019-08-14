@@ -1,0 +1,29 @@
+.title-logo {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.logo {
+    position: relative;
+    left: -27px;
+    top: -20px;
+    margin: 10px;
+}
+
+
+.siderHeight {
+    height: 600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 260px;
+}
+
+.siderHeight::-webkit-scrollbar {
+    width: 2px;
+    /*height: 4px;*/
+}
+
+.inputBook{
+    margin: 0 800px;
+}
