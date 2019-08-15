@@ -1,0 +1,30 @@
+.login{
+    width: 300px;
+    margin: 0 auto;
+}
+
+
+
+.header-login-row{
+    display: flex;
+    flex-direction: row;
+}
+
+img{
+    width: 70px;
+}
+.header-login-row .header-login-name{
+    line-height: auto;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.main-login-content{
+    width: 30%;
+    margin: 100px auto;
+    background: #fff;
+    padding: 30px;
+    box-shadow: azure;
+    border-radius: 20px;
+}

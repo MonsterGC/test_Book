@@ -48,9 +48,13 @@ class StoreCard extends React.Component {
     componentDidUpdate() {
         this.state.loading = true;
     }
+    //解决内存泄漏问题
+    componentWillUnmount(){
+        clearTimeout(this.loadTime);
+    }
     render() {
         const dataAll = ClassStore[this.props.data.key].data[this.props.data.item].dataAll;
-        setTimeout(e => {
+        this.loadTime = setTimeout(e => {
             this.state.loading = false
             this.forceUpdate();
         }, 1000)

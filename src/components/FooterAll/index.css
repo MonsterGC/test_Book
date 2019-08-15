@@ -1,0 +1,15 @@
+#footer-2013 {
+    padding-bottom: 30px;
+    text-align: center;
+}
+.w {
+    width: 990px;
+    margin: 0 auto;
+}
+a {
+    color: #666;
+    text-decoration: none;
+}
+#footer-2013 .links a, #footer-2013 .links span {
+    margin: 0 10px;
+}

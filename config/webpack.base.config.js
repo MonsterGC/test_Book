@@ -1,11 +1,22 @@
 const paths = require('./paths');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: paths.mainJs,
     output: {
         filename: 'bundle-[hash].js',
         path: paths.buildPath
+    },
+    devServer: {
+        historyApiFallback: {
+            rewrites: [
+                {
+                    from: /.*/,
+                    to: path.join(__dirname, "../index.html")
+                }
+            ]
+        }
     },
     resolve: {
         extensions: ['.js', '.ts', '.tsx']

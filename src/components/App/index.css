@@ -26,4 +26,6 @@
 
 .inputBook{
     margin: 0 800px;
+    display: flex;
+    flex-direction: row;
 }

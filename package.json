@@ -38,5 +38,18 @@
     "start": "webpack --config ./config/webpack.config.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "babel": {
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ]
+    ],
+    "presets": [
+      "react-app"
+    ]
+  }
 }
