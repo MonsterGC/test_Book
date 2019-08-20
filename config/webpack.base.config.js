@@ -43,5 +43,8 @@ module.exports = {
             template: paths.html,
             inject: true
         })
-    ]
+    ],
+    devServer: {
+        port: 3000
+    },
 }
