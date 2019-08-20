@@ -2,25 +2,46 @@ import React from 'react';
 import { Form, Icon, Input, Button, Layout } from 'antd';
 import FooterAll from '../../components/FooterAll/FooterAll';
 import './index.css'
+import { func } from 'prop-types';
 
 const { Header, Content, Footer } = Layout;
 const MainLogin = (props) => {
     return (
         <div className="main-login-content">
-            <Form className="login-form">
+            <Form onSubmit={props.handleSubmit} className="login-form">
                 <Form.Item>
-                    <Input
-                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                        placeholder="您的邮箱"
-                    />,
-            </Form.Item>
+                    {props.getFieldDecorator('email', {
+                        rules: [{
+                            required: true,
+                            message: '邮箱不能为空',
+                        }, {
+                            message: '请输入正确的邮箱',
+                            pattern: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/
+                        }],
+                    })(
+                        <Input
+                            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                            placeholder="您的邮箱"
+                        />
+                    )}
+                </Form.Item>
                 <Form.Item>
-                    <Input
-                        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                        type="password"
-                        placeholder="您的密码"
-                    />,
-            </Form.Item>
+                    {props.getFieldDecorator('password', {
+                        rules: [{
+                            required: true,
+                            message: '密码不能为空',
+                        }, {
+                            min: 6,
+                            message: '请输入正确格式的密码'
+                        }],
+                    })(
+                        <Input
+                            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                            type="password"
+                            placeholder="您的密码"
+                        />
+                    )}
+                </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         Log in
@@ -48,8 +69,17 @@ const HeaderLogin = () => {
 }
 
 
-class Login extends React.Component {
+class CustomizedForm extends React.Component {
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                console.log('Received values of form: ', values.email);
+            }
+        });
+    };
     render() {
+        const { getFieldDecorator } = this.props.form;
         return (
             <Layout>
                 <Header className="header">
@@ -57,7 +87,7 @@ class Login extends React.Component {
                 </Header>
                 <Layout>
                     <Content>
-                        <MainLogin />
+                        <MainLogin getFieldDecorator={getFieldDecorator} handleSubmit={this.handleSubmit} />
                     </Content>
                 </Layout>
                 <Footer>
@@ -67,4 +97,6 @@ class Login extends React.Component {
         )
     }
 }
+const Login = Form.create({ name: 'normal_login' })(CustomizedForm);
+
 export default Login;
