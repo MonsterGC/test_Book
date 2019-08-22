@@ -4,6 +4,7 @@ import App from './components/App/App';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import ErrorPage from './pages/Errorpage/ErrorPage';
+import AllCard from './pages/AllCard/AllCard'
 
 class Routes extends React.Component {
     render() {
@@ -13,6 +14,7 @@ class Routes extends React.Component {
                     <Route exact path="/" component={App} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
+                    <Route path="/allCard" component={AllCard} />
                     <Route component={ErrorPage} />
                 </Switch>
             </Router>

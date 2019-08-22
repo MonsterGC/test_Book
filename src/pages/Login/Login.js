@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, Icon, Input, Button, Layout } from 'antd';
 import FooterAll from '../../components/FooterAll/FooterAll';
 import './index.css'
-import { func } from 'prop-types';
 
 const { Header, Content, Footer } = Layout;
 const MainLogin = (props) => {

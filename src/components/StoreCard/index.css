@@ -14,3 +14,33 @@
 .pagination {
     margin: 0 auto;
 }
+
+.model-row{
+    display:flex;
+    flex-direction: row;
+}
+
+.model-column{
+    display: flex;
+    flex-direction: column;
+}
+
+.model-img{
+    width: 200px;
+}
+.text-01{
+    color: brown;
+    font-size: 20px;
+}
+.text-02{
+    margin-top: 30px; 
+}
+
+.delete{
+    position: absolute;
+    left: 440px;
+}
+
+.model-right{
+   margin: 30px 400px;
+}

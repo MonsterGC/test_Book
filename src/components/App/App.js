@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Input, Icon } from 'antd';
+import { Layout, Menu, Input, Icon, Badge } from 'antd';
 import StoreCard from "../StoreCard/StoreCard"
 import ClassStore from '../../utils/dataStore'
 import FooterAll from '../FooterAll/FooterAll';
@@ -17,55 +17,73 @@ const Paths = {
     logoPath: './src/images/logo.png'
 }
 
-function HeaderIndex() {
-    return (
-        <Header className="header">
-            <div className="title-logo">
-                <div className="logo" >
-                    <a href="/#/">
-                        <img src={Paths.logoPath} width="80"></img>
-                    </a>
-                </div>
-                <div>
-                    <Menu
-                        theme="dark"
-                        mode="horizontal"
-                        style={{ lineHeight: '64px' }}
-                    >
-                        <Menu.Item key="1">
-                            <Link to="/login">你好！请登录 </Link>
-                        </Menu.Item>
-                        <Menu.Item key="2">免费注册</Menu.Item>
-                        <Menu.Item key="3"><Icon type="account-book" />我的订单</Menu.Item>
-                        <SubMenu
-                            title={
-                                <span className="submenu-title-wrapper">
-                                    <Icon type="user" />
-                                    我的易购
-            </span>
-                            }
-                        >
-                            <Menu.Item key="user:1">待处理订单</Menu.Item>
-                            <Menu.Item key="user:2">降价商品</Menu.Item>
-                        </SubMenu>
-                    </Menu>
-                </div>
-                <div className="inputBook">
+
+class HeaderIndex extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    //解决内存泄漏问题
+    componentWillUnmount = () => {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
+    render() {
+        return (
+            <Header className="header">
+                <div className="title-logo">
+                    <div className="logo" >
+                        <a href="/#/">
+                            <img src={Paths.logoPath} width="80"></img>
+                        </a>
+                    </div>
                     <div>
-                        <Search
-                            placeholder="今日百万每100减50"
-                            onSearch={value => console.log(value)}
-                            style={{ width: 200 }}
-                        />
+                        <Menu
+                            theme="dark"
+                            mode="horizontal"
+                            style={{ lineHeight: '64px' }}
+                        >
+                            <Menu.Item key="1">
+                                <Link to="/login">你好！请登录 </Link>
+                            </Menu.Item>
+                            <Menu.Item key="2">
+                                <Link to="/register">免费注册</Link></Menu.Item>
+                            <Menu.Item key="3" onClick={(e) => this.props.ShowTemp(e)}><Icon type="account-book" />
+
+                                <Badge count={0}>
+                                    我的换书箱
+                                </Badge>
+                            </Menu.Item>
+                            <SubMenu
+                                title={
+                                    <span className="submenu-title-wrapper">
+                                        <Icon type="user" />
+                                        我的易购
+            </span>
+                                }
+                            >
+                                <Menu.Item key="user:1">待处理订单</Menu.Item>
+                                <Menu.Item key="user:2">降价商品</Menu.Item>
+                            </SubMenu>
+                        </Menu>
                     </div>
-                    <div style={{ color: '#fff', width: 100, marginLeft: 10 }}>
-                        <span>
-                            我的购物车<Icon type="account-book" /></span>
+                    <div className="inputBook">
+                        <div>
+                            <Search
+                                placeholder="今日百万每100减50"
+                                onSearch={value => console.log(value)}
+                                style={{ width: 200 }}
+                            />
+                        </div>
+                        <div style={{ color: '#fff', width: 100, marginLeft: 10 }}>
+                            <span>
+                                我的购物车<Icon type="account-book" /></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </Header>
-    );
+            </Header>
+        );
+    }
 }
 
 function SideBar(props) {
@@ -101,22 +119,33 @@ function SideBar(props) {
 }
 
 
-function SiderPage(props) {
-    return (
-        <Layout style={{ padding: '0 24px 24px' }}>
-            <Content
-                style={{
-                    background: '#fff',
-                    padding: 24,
-                    margin: 10,
-                    minHeight: 280,
-                }}
-            >
+class SiderPage extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    //解决内存泄漏问题
+    componentWillUnmount = () => {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
+    render() {
+        return (
+            <Layout style={{ padding: '0 24px 24px' }}>
+                <Content
+                    style={{
+                        background: '#fff',
+                        padding: 24,
+                        margin: 10,
+                        minHeight: 280,
+                    }}
+                >
 
-                <CurrentPage data={props.data} />
-            </Content>
-        </Layout>
-    );
+                    <CurrentPage data={this.props.data} onClose={this.props.onClose} cardload={this.props.cardload} />
+                </Content>
+            </Layout>
+        );
+    }
 }
 
 class App extends React.Component {
@@ -126,10 +155,16 @@ class App extends React.Component {
             data: {
                 key: '0',
                 item: '0'
-            }
+            },
+            cardload: false
         }
     }
-
+    //解决内存泄漏问题
+    componentWillUnmount = () => {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
     SiderClick = (key, item) => {
         this.setState({
             data: {
@@ -141,14 +176,29 @@ class App extends React.Component {
         this.forceUpdate();
     }
 
-    render() {
+    ShowTemp = (e) => {
+        this.setState({
+            cardload: true
+        })
+        this.forceUpdate();
+    }
+    onClose = () => {
+        this.setState({
+            cardload: false
+        })
+        this.forceUpdate();
+    }
+    badge = (value) => {
+        console.log(value);
+    }
 
+    render() {
         return (
             <Layout>
-                <HeaderIndex />
+                <HeaderIndex ShowTemp={this.ShowTemp} />
                 <Layout>
                     <SideBar func={this.SiderClick} />
-                    <SiderPage data={this.state.data} />
+                    <SiderPage data={this.state.data} badge={this.badge} onClose={this.onClose} cardload={this.state.cardload} />
                 </Layout>
                 <Footer>
                     < FooterAll />
