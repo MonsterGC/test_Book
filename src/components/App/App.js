@@ -1,8 +1,19 @@
 import React from 'react';
-import { Layout, Menu, Input, Icon, Badge } from 'antd';
+import {
+    Layout,
+    Menu,
+    Input,
+    Icon,
+    message,
+    Tag,
+    Modal,
+    Button,
+    Spin
+} from 'antd';
 import StoreCard from "../StoreCard/StoreCard"
 import ClassStore from '../../utils/dataStore'
 import FooterAll from '../FooterAll/FooterAll';
+import FeedBack from '../../components/FeedBack/FeedBack'
 import { Link } from 'react-router-dom';
 import "./index.css";
 
@@ -21,14 +32,52 @@ const Paths = {
 class HeaderIndex extends React.Component {
     constructor(props) {
         super(props);
+        if (localStorage.getItem('adminNumLoS')) {
+            this.state = {
+                adminIndex: true
+            }
+        } else {
+            this.state = {
+                adminIndex: false
+            }
+        }
+
+    }
+    state = {
+        loading: false,
+        visible: false
+    };
+    showModal = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    handleOk = () => {
+        this.setState({ loading: true });
+        setTimeout(() => {
+            this.setState({ loading: false, visible: false });
+        }, 3000);
+    };
+
+    handleCancel = () => {
+        this.setState({ visible: false });
+    };
+    del() {
+        this.setState({
+            adminIndex: false
+        })
+        localStorage.removeItem('adminNumLoS')
+        message.success('注销成功')
     }
     //解决内存泄漏问题
     componentWillUnmount = () => {
-        this.setState = (state,callback)=>{
-          return;
+        this.setState = (state, callback) => {
+            return;
         };
     }
     render() {
+        const { visible, loading } = this.state;
         return (
             <Header className="header">
                 <div className="title-logo">
@@ -43,28 +92,17 @@ class HeaderIndex extends React.Component {
                             mode="horizontal"
                             style={{ lineHeight: '64px' }}
                         >
-                            <Menu.Item key="1">
+                            <Menu.Item disabled={this.state.adminIndex} key="1">
                                 <Link to="/login">你好！请登录 </Link>
                             </Menu.Item>
-                            <Menu.Item key="2">
+                            <Menu.Item disabled={this.state.adminIndex} key="2">
                                 <Link to="/register">免费注册</Link></Menu.Item>
-                            <Menu.Item key="3" onClick={(e) => this.props.ShowTemp(e)}><Icon type="account-book" />
+                            <Menu.Item disabled={!this.state.adminIndex} key="3" onClick={(e) => this.props.ShowTemp(e)}><Icon type="account-book" />
 
-                                <Badge count={0}>
-                                    我的换书箱
-                                </Badge>
+                                我的换书箱
                             </Menu.Item>
-                            <SubMenu
-                                title={
-                                    <span className="submenu-title-wrapper">
-                                        <Icon type="user" />
-                                        我的易购
-            </span>
-                                }
-                            >
-                                <Menu.Item key="user:1">待处理订单</Menu.Item>
-                                <Menu.Item key="user:2">降价商品</Menu.Item>
-                            </SubMenu>
+                            <Menu.Item disabled={!this.state.adminIndex} key="4" onClick={(e) => this.del()}>
+                                注销</Menu.Item>
                         </Menu>
                     </div>
                     <div className="inputBook">
@@ -75,12 +113,32 @@ class HeaderIndex extends React.Component {
                                 style={{ width: 200 }}
                             />
                         </div>
-                        <div style={{ color: '#fff', width: 100, marginLeft: 10 }}>
-                            <span>
-                                我的购物车<Icon type="account-book" /></span>
+                        <div style={{ width: 30, marginLeft: 10 }}>
+                            <Tag color="orange" onClick={this.showModal}>反馈</Tag>
+                        </div>
+                        <div style={{ width: 100, marginLeft: 20 }}>
+                            <Tag color="orange" onClick={() => this.props.nav()} >
+                                管理员登录
+                            </Tag>
                         </div>
                     </div>
                 </div>
+                <Modal
+                    visible={visible}
+                    title="反馈"
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    footer={[
+                        <Button key="back" onClick={this.handleCancel}>
+                            取消
+            </Button>,
+                        <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
+                            提交反馈
+            </Button>,
+                    ]}
+                >
+                    <FeedBack />
+                </Modal>
             </Header>
         );
     }
@@ -125,8 +183,8 @@ class SiderPage extends React.Component {
     }
     //解决内存泄漏问题
     componentWillUnmount = () => {
-        this.setState = (state,callback)=>{
-          return;
+        this.setState = (state, callback) => {
+            return;
         };
     }
     render() {
@@ -156,13 +214,15 @@ class App extends React.Component {
                 key: '0',
                 item: '0'
             },
-            cardload: false
+            cardload: false,
+            loading: false
         }
     }
+
     //解决内存泄漏问题
-    componentWillUnmount = () => {
-        this.setState = (state,callback)=>{
-          return;
+    componentWillUnmount() {
+        this.setState = (state, callback) => {
+            return;
         };
     }
     SiderClick = (key, item) => {
@@ -188,22 +248,33 @@ class App extends React.Component {
         })
         this.forceUpdate();
     }
-    badge = (value) => {
-        console.log(value);
+    nav = () => {
+        this.setState({
+            loading: true
+        })
+        setTimeout(() => {
+            this.setState({
+                loading: false
+            })
+            message.success('登录成功')
+            this.props.history.push('/admin');
+        }, 1000)
     }
 
     render() {
         return (
-            <Layout>
-                <HeaderIndex ShowTemp={this.ShowTemp} />
+            <Spin tip="Loading..." spinning={this.state.loading}>
                 <Layout>
-                    <SideBar func={this.SiderClick} />
-                    <SiderPage data={this.state.data} badge={this.badge} onClose={this.onClose} cardload={this.state.cardload} />
+                    <HeaderIndex ShowTemp={this.ShowTemp} nav={this.nav} />
+                    <Layout>
+                        <SideBar func={this.SiderClick} />
+                        <SiderPage data={this.state.data} onClose={this.onClose} cardload={this.state.cardload} />
+                    </Layout>
+                    <Footer>
+                        < FooterAll />
+                    </Footer>
                 </Layout>
-                <Footer>
-                    < FooterAll />
-                </Footer>
-            </Layout>
+            </Spin>
         );
     }
 }

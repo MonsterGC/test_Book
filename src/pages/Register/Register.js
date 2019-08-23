@@ -1,7 +1,8 @@
 import React from 'react';
-import { Form, Icon, Input, Button, Layout, message } from 'antd';
+import { Form, Icon, Input, Button, Layout, message, Spin } from 'antd';
 import FooterAll from '../../components/FooterAll/FooterAll';
-import API from '../../api';
+// import API from '../../api';
+import AdminNum from '../../utils/admin';
 import './index.css';
 const { Header, Content, Footer } = Layout;
 
@@ -93,32 +94,58 @@ const MainRegister = (props) => {
 }
 
 class CustomizedForm extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    state = {
+        loading: false,
+        list: AdminNum
+    }
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                if (values.password != values.password2) {
-                    message.error('两次密码不一致');
-                } else {
-                    let email = values.email
-                    // API.Request('/Hello', { method: "post", data: { email } }).then(res => {
-                    //     // console.log(res) 成功后跳转至login.js
-                    //     if (res.status === 200 && res.data) {
-                    //         console.log(res.data);
-                    //     }
-                    // })
-                    console.log(
-                        API.Request('/Hello', { method: "post", data: { email }, header: { 'Access-Control-Allow-Headers': 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild' } })
-                            .then(res => {
-                                // console.log(res) 成功后跳转至login.js
-                                if (res.status === 200 && res.data) {
-                                    console.log(res.data);
-                                }
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            }));
-                }
+                this.setState({
+                    loading: true
+                })
+                setTimeout(() => {
+                    let temp = (
+                        () => {
+                            for (let i = 0; i < this.state.list.length; i++) {
+                                if (values.email == this.state.list[i].email) return i;
+                            }
+                            return false;
+                        }
+                    )()
+                    this.setState({
+                        loading: false
+                    })
+                    if (typeof temp == "number") {
+                        message.info('用户已注册')
+                    } else {
+                        if (values.password != values.password2) {
+                            message.error('两次密码不一致');
+                        } else {
+                            localStorage.setItem('adminNumLoS', JSON.stringify({
+                                email: values.email,
+                                password: values.password
+                            }))
+                            this.props.history.push('/login');
+                            message.success('注册成功')
+                            // console.log(
+                            //     API.Request('/Hello', { method: "post", data: { email }, header: { 'Access-Control-Allow-Headers': 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild' } })
+                            //         .then(res => {
+                            //             // console.log(res) 成功后跳转至login.js
+                            //             if (res.status === 200 && res.data) {
+                            //                 console.log(res.data);
+                            //             }
+                            //         })
+                            //         .catch(err => {
+                            //             console.log(err);
+                            //         }));
+                        }
+                    }
+                }, 1000);
             }
         });
     };
@@ -126,19 +153,21 @@ class CustomizedForm extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Layout>
-                <Header className="header">
-                    <HeaderRegister />
-                </Header>
+            <Spin spinning={this.state.loading}>
                 <Layout>
-                    <Content>
-                        <MainRegister getFieldDecorator={getFieldDecorator} handleSubmit={this.handleSubmit} />
-                    </Content>
+                    <Header className="header">
+                        <HeaderRegister />
+                    </Header>
+                    <Layout>
+                        <Content>
+                            <MainRegister getFieldDecorator={getFieldDecorator} handleSubmit={this.handleSubmit} />
+                        </Content>
+                    </Layout>
+                    <Footer>
+                        < FooterAll />
+                    </Footer>
                 </Layout>
-                <Footer>
-                    < FooterAll />
-                </Footer>
-            </Layout>
+            </Spin>
         )
     }
 }

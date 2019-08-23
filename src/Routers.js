@@ -5,6 +5,8 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import ErrorPage from './pages/Errorpage/ErrorPage';
 import AllCard from './pages/AllCard/AllCard'
+import SubmitOk from './pages/SubmitOk/SubmitOk';
+import Admin from './pages/Admin/Admin';
 
 class Routes extends React.Component {
     render() {
@@ -15,6 +17,8 @@ class Routes extends React.Component {
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
                     <Route path="/allCard" component={AllCard} />
+                    <Route path="/submitOk" component={SubmitOk} />
+                    <Route path="/admin" component={Admin} />
                     <Route component={ErrorPage} />
                 </Switch>
             </Router>

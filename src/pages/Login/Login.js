@@ -1,6 +1,7 @@
 import React from 'react';
-import { Form, Icon, Input, Button, Layout } from 'antd';
+import { Form, Icon, Input, Button, Layout, message, Spin } from 'antd';
 import FooterAll from '../../components/FooterAll/FooterAll';
+import AdminNum from '../../utils/admin';
 import './index.css'
 
 const { Header, Content, Footer } = Layout;
@@ -69,30 +70,85 @@ const HeaderLogin = () => {
 
 
 class CustomizedForm extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    state = {
+        adminNum: AdminNum,
+        loading: false
+    }
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values.email);
+                let tempGet = JSON.parse(localStorage.getItem('adminNumLoS'));
+                this.setState({
+                    loading: true
+                })
+                let temp = (
+                    () => {
+                        if (tempGet) {
+                            if (tempGet.email == values.email) {
+                                return true
+                            }
+                        }
+                        for (let i = 0; i < this.state.adminNum.length; i++) {
+                            if (values.email == this.state.adminNum[i].email) return i;
+                        }
+                        return false;
+                    }
+                )()
+
+                setTimeout(() => {
+                    this.setState({
+                        loading: false
+                    })
+                    if (temp) {
+                        if (typeof temp == "number") {
+                            if (values.password == this.state.adminNum[temp].password) {
+                                localStorage.setItem('adminNumLoS', JSON.stringify({
+                                    email: values.email,
+                                    password: values.password
+                                }))
+                                message.success('登录成功')
+                                this.props.history.push('/');
+                            } else {
+                                message.error('密码错误')
+                            }
+                        } else {
+                            if (values.password == tempGet.password) {
+                                message.success('登录成功')
+                                this.props.history.push('/');
+                            } else {
+                                message.error('密码错误')
+                            }
+                        }
+                    } else {
+                        console.log(temp, '123');
+                        message.error('用户不存在请跳转注册页面')
+                    }
+                }, 1000)
             }
         });
     };
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Layout>
-                <Header className="header">
-                    <HeaderLogin />
-                </Header>
+            <Spin spinning={this.state.loading}>
                 <Layout>
-                    <Content>
-                        <MainLogin getFieldDecorator={getFieldDecorator} handleSubmit={this.handleSubmit} />
-                    </Content>
+                    <Header className="header">
+                        <HeaderLogin />
+                    </Header>
+                    <Layout>
+                        <Content>
+                            <MainLogin getFieldDecorator={getFieldDecorator} handleSubmit={this.handleSubmit} />
+                        </Content>
+                    </Layout>
+                    <Footer>
+                        < FooterAll />
+                    </Footer>
                 </Layout>
-                <Footer>
-                    < FooterAll />
-                </Footer>
-            </Layout>
+            </Spin>
         )
     }
 }

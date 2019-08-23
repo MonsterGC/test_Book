@@ -84,27 +84,34 @@ class PageData extends React.Component {
     }
     handleOk = e => {
         let CardTemp = this.state.Card
-        if ((() => {
-            for (let i = 0; i < this.state.Card.length; i++) {
-                if (this.state.image == this.state.Card[i].image) return true
+        if (localStorage.getItem('adminNumLoS')) {
+            if ((() => {
+                for (let i = 0; i < this.state.Card.length; i++) {
+                    if (this.state.image == this.state.Card[i].image) return true
+                }
+            })()) {
+                message.error('已加入箱中...');
+            } else {
+                CardTemp.push({
+                    image: this.state.image,
+                    msg: this.state.msg,
+                    money: this.state.money
+                })
+                message.success('加入成功');
             }
-        })()) {
-            message.error('已加入箱中...');
+            this.setState({
+                visible: false,
+                Card: CardTemp
+            });
+            // ------------------------------------------------------
+            // this.props.badge(this.state.Card.length)     子向父组件传值失败！！！
+            // --------------------------------------------------
         } else {
-            CardTemp.push({
-                image: this.state.image,
-                msg: this.state.msg,
-                money: this.state.money
+            this.setState({
+                visible: false
             })
-            message.success('加入成功');
+            message.info('请先登录')
         }
-        this.setState({
-            visible: false,
-            Card: CardTemp
-        });
-        // ------------------------------------------------------
-        // this.props.badge(this.state.Card.length)     子向父组件传值失败！！！
-        // --------------------------------------------------
     };
 
     handleCancel = e => {
@@ -222,7 +229,7 @@ class StoreCard extends React.Component {
             this.state.loading = false
             this.forceUpdate();
         }, 1000)
-        return dataAll.length ? <PageData badge={this.props.badge} data={dataAll} onClose={this.props.onClose} loading={this.state.loading} cardload={this.props.cardload} /> : <Empty description={false} />
+        return dataAll.length ? <PageData data={dataAll} onClose={this.props.onClose} loading={this.state.loading} cardload={this.props.cardload} /> : <Empty description={false} />
     }
 }
 export default StoreCard;
