@@ -1,5 +1,16 @@
 import React from "react";
-import { Card, Pagination, Empty, Spin, Modal, Button, message, Drawer } from 'antd';
+import {
+    Card,
+    Pagination,
+    Empty,
+    Spin,
+    Modal,
+    Button,
+    message,
+    Drawer,
+    Affix,
+    Avatar
+} from 'antd';
 import ClassStore from '../../utils/dataStore'
 import { Link } from 'react-router-dom';
 import './index.css'
@@ -64,7 +75,8 @@ class PageData extends React.Component {
         image: '',
         msg: '',
         money: '',
-        Card: []
+        Card: [],
+        size: 'large'
     };
 
     showModal = (x, y, z) => {
@@ -141,6 +153,7 @@ class PageData extends React.Component {
         }
     }
     render() {
+        const { size } = this.state;
         return (
             <div>
                 <Spin spinning={this.props.loading}>
@@ -198,6 +211,11 @@ class PageData extends React.Component {
                     <div className="pagination">
                         <Pagination size="small" total={50} showSizeChanger showQuickJumper />
                     </div>
+                    <Affix style={{ position: 'absolute', bottom: 10, right: 100 }}>
+                        <Link to="/releaseBook">
+                            <Button type="primary" shape="circle" icon="form" size={size} />
+                        </Link>
+                    </Affix>
                 </Spin>
             </div>
         );

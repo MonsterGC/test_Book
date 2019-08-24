@@ -7,6 +7,7 @@ import ErrorPage from './pages/Errorpage/ErrorPage';
 import AllCard from './pages/AllCard/AllCard'
 import SubmitOk from './pages/SubmitOk/SubmitOk';
 import Admin from './pages/Admin/Admin';
+import ReleaseBook from './pages/ReleaseBook/ReleaseBook';
 
 class Routes extends React.Component {
     render() {
@@ -19,6 +20,7 @@ class Routes extends React.Component {
                     <Route path="/allCard" component={AllCard} />
                     <Route path="/submitOk" component={SubmitOk} />
                     <Route path="/admin" component={Admin} />
+                    <Route path="/releaseBook" component={ReleaseBook} />
                     <Route component={ErrorPage} />
                 </Switch>
             </Router>

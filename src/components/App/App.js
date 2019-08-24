@@ -129,12 +129,6 @@ class HeaderIndex extends React.Component {
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                     footer={[
-                        <Button key="back" onClick={this.handleCancel}>
-                            取消
-            </Button>,
-                        <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
-                            提交反馈
-            </Button>,
                     ]}
                 >
                     <FeedBack />
